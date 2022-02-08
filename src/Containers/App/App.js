@@ -18,22 +18,7 @@ function App() {
   // Cycle de vie
   useEffect(()=>{
     inputRef.current.focus();
-
-    axios.get('/taches.json')
-    .then(response=>{
-      console.log(response);
-      const newTasks = [];
-      for (let key in response.data){
-        newTasks.push({
-          ...response.data[key],
-          id:key
-        })
-      }
-      setTasks(newTasks)
-    })
-    .catch(error=>{
-      console.log(error);
-    })
+    fetchTask();
   },[]);
 
   // Fonctions
@@ -83,6 +68,7 @@ function App() {
     axios.post('/taches.json', newTask)
     .then(response =>{
       console.log(response);
+      fetchTask();
     })
     .catch(error =>{
       console.log(error);
@@ -93,6 +79,24 @@ function App() {
   const changedFormHandler = event => {
     setInput(event.target.value);
   }
+
+const fetchTask =() =>{
+  axios.get('/taches.json')
+  .then(response=>{
+    console.log(response);
+    const newTasks = [];
+    for (let key in response.data){
+      newTasks.push({
+        ...response.data[key],
+        id:key
+      })
+    }
+    setTasks(newTasks)
+  })
+  .catch(error=>{
+    console.log(error);
+  })
+}
 
   // Variables
   let tasksDisplayed = tasks.map((task, index) => (
